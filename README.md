@@ -7,3 +7,5 @@ https://www.theodinproject.com/lessons/ruby-sub-strings
 https://www.theodinproject.com/lessons/ruby-stock-picker
 
 https://www.theodinproject.com/lessons/ruby-bubble-sort
+
+https://www.theodinproject.com/lessons/ruby-tic-tac-toe
