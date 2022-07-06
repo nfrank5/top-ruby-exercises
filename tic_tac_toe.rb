@@ -65,7 +65,7 @@ class Game
     board.print_board
     puts 'Insert your play (for example: A1)'
     turn = [@player_one, @player_two]
-    loop
+    loop do
       if turn[0] == @player_one
         cross_circle = 'X'
       else
