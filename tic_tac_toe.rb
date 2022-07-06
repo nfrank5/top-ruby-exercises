@@ -39,6 +39,7 @@ class Board
                       board[1][:b] == board[2][:a] &&
                       board[0][:c] != ' '
     puts "#{player} is the winner!!!" if winner
+    winner
   end
 
   def print_board
@@ -77,12 +78,10 @@ class Game
     current_board.print_board
     puts 'Mark a space(for example: A1)'
     turn = [@player_one, @player_two]
-
+    we_have_a_winner = false
     9.times do
       cross_circle = turn[0] == @player_one ? 'X' : 'O'
       puts "#{@player_one}: is X and #{@player_two} is: O"
-      
-
       loop do
         puts "It's #{turn[0]} turn"
         @move = gets.chomp.downcase.split('')
@@ -94,13 +93,15 @@ class Game
         end
         break
       end
-      break if current_board.check_for_winner(turn[0])
-
+      we_have_a_winner = current_board.check_for_winner(turn[0])
+      break if we_have_a_winner
       current_board.print_board
       turn.reverse!
     end
-    clear_screen
-    puts "It's a draw"
+    unless we_have_a_winner
+      clear_screen
+      puts "It's a draw"
+    end
     current_board.print_board
   end
 
