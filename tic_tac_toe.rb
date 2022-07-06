@@ -1,24 +1,18 @@
-module Messages
+# frozen_string_literal: true
 
-  def clear_screen
-    system("cls") || system("clear")
-  end
-
-
+def clear_screen
+  system('cls') || system('clear')
 end
 
-
 class Board 
-
   attr_accessor :board
 
-  def initialize()
-    @first_row = { a: ' ', b: ' ', c: ' '}
-    @second_row = { a: ' ', b: ' ', c: ' '}
-    @third_row = { a: ' ', b: ' ', c: ' '}
+  def initialize
+    @first_row = { a: ' ', b: ' ', c: ' ' }
+    @second_row = { a: ' ', b: ' ', c: ' ' }
+    @third_row = { a: ' ', b: ' ', c: ' ' }
 
     @board = [@first_row, @second_row, @third_row]
-
   end
 
   def upadate_row(row, column, value)
@@ -28,6 +22,7 @@ class Board
     end
     false
   end
+
   def print_board
     puts '  A   B   C '
     i = 1
@@ -36,11 +31,9 @@ class Board
       i += 1
     end
   end
-
 end
 
 class Game
-  include Messages
   attr_accessor :board
 
   def initialize
@@ -49,54 +42,46 @@ class Game
     @player_two = ''
     @score = [0, 0]
     @move = []
-  end 
+  end
 
-  def begining 
-    puts "Insert name of player one"
+  def begining
+    puts 'Insert name of player one'
     @player_one = gets.chomp
-    clear_screen
-    puts "Insert name of player two"
+    puts 'Insert name of player two'
     @player_two = gets.chomp
     clear_screen
-    puts "#{@player_one}: is X and #{@player_two} is: O"
   end
-    
+
   def play
     board.print_board
-    puts 'Insert your play (for example: A1)'
+    puts 'Mark a space(for example: A1)'
     turn = [@player_one, @player_two]
     loop do
-      if turn[0] == @player_one
-        cross_circle = 'X'
-      else
-        cross_circle = 'O'
-      end
-
+      cross_circle = turn[0] == @player_one ? 'X' : 'O'
+      puts "#{@player_one}: is X and #{@player_two} is: O"
+      puts "It's #{turn[0]} turn"
       @move = gets.chomp.downcase.split('')
       clear_screen
-      unless board.upadate_row(@board.board[@move[1].to_i-1], @move[0].to_sym, cross_circle)
-        puts "It's #{turn[0]} turn"
+      unless board.upadate_row(@board.board[@move[1].to_i - 1], @move[0].to_sym, cross_circle)
         board.print_board
-        puts 'Choose another spot'
+        puts 'Mark a free space'
         next
       end
       break if check_for_winner(board)
-      puts "It's #{turn[0]} turn"
+
       board.print_board
       turn.reverse!
     end
-  end
-
-  def finish
-    p 'We have a Winner'
+    puts "#{turn[0]} is the winner!!!"
+    board.print_board
   end
 
   def check_for_winner(board)
     winner = false
     board.board.each do |row|
-      winner = true if row[:a] == row[:b] && 
-                              row[:b] == row[:c] && 
-                              row[:c] != ' '
+      winner = true if  row[:a] == row[:b] &&
+                        row[:b] == row[:c] &&
+                        row[:c] != ' '
     end
     %i[a b c].each do |column|
       winner = true if  board.board[0][column] == board.board[1][column] &&
@@ -119,4 +104,3 @@ juego = Game.new
 
 juego.begining
 juego.play
-juego.finish
