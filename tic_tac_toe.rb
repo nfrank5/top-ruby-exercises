@@ -8,7 +8,6 @@ class Board
     @second_row = { a: ' ', b: ' ', c: ' ' }
     @third_row = { a: ' ', b: ' ', c: ' ' }
     @board = [@first_row, @second_row, @third_row]
-
   end
 
   def update_row(row, column, value)
