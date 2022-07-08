@@ -97,18 +97,30 @@ class Game
     system('cls') || system('clear')
   end
 
+  def winner?(feedback)
+    feedback.count('black') == 4
+  end
+
   def play_game
     game_board = Board.new
+    fb = []
     welcome
     @hidden_code_pattern = generate_hidden_code_pattern
-    12.times do 
+    12.downto(1) do |i|
       clear_screen
       # p @hidden_code_pattern
       game_board.print_board
+      puts "You have #{i} " + (i==1?"guess":"guesses") + " left"
       @guess_pattern = player_guess_pattern 
-      game_board.add_pattern(@guess_pattern, feedback(@guess_pattern, @hidden_code_pattern))
+      fb = feedback(@guess_pattern, @hidden_code_pattern)
+      game_board.add_pattern(@guess_pattern, fb)
+      if winner?(fb)
+        puts "You Won"
+        break
+      end
     end
     clear_screen
+    puts 'Game Over'
     game_board.print_board
   end
 end
