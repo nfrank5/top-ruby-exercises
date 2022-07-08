@@ -7,26 +7,42 @@ class Player
   end
 end
 
-
 class Board
-  def initialize
+  attr_reader :guess_pattern_history
 
-    
+  def initialize
     @guess_pattern_history = []
+    @feedback_history = []
   end
 
+  def convert_pattern_to_colors(numbers)
+    numbers.inject([]) { |colors, number| colors.push(CODE_PEGS[number-1]) }
+  end
 
+  def convert_feedback_to_colors(numbers)
+    numbers.inject([]) { |colors, number| colors.push(KEY_PEGS[number]) }
+  end
 
+  def add_pattern(pattern, feedback)
+    @guess_pattern_history.push(convert_pattern_to_colors(pattern))
+    @feedback_history.push(convert_feedback_to_colors(feedback))
+  end
+
+  def print_board
+    @guess_pattern_history.each_index do |i|
+      puts "Guess: #{guess_pattern_history[i]} Feedback:#{@feedback_history[i]} "
+    end
+  end
 end
 
 class Game
 
   def initialize
-    @game_board = Board.new
+
     @allow_duplicates = false
     @hidden_code_pattern = []
     @feedback = []
-    @guess_pattern = ""
+    @guess_pattern = ''
   end
 
   def welcome
@@ -66,8 +82,8 @@ class Game
       end
     end
     multiple_white_key_pegs.uniq.each do |element|
-      if(hidden_code.count(element)-black_key_pegs.count(element) <= multiple_white_key_pegs.count)
-        (hidden_code.count(element)-black_key_pegs.count(element)).times { final_key_pegs.push(1) }
+      if hidden_code.count(element) - black_key_pegs.count(element) <= multiple_white_key_pegs.count
+        (hidden_code.count(element) - black_key_pegs.count(element)).times { final_key_pegs.push(1) }
       else
         multiple_white_key_pegs.count.times { final_key_pegs.push(1)}
       end
@@ -77,12 +93,23 @@ class Game
     final_key_pegs.sort
   end
 
+  def clear_screen
+    system('cls') || system('clear')
+  end
+
   def play_game
+    game_board = Board.new
     welcome
     @hidden_code_pattern = generate_hidden_code_pattern
-    p @hidden_code_pattern
-    @guess_pattern = player_guess_pattern 
-    p feedback(@guess_pattern, @hidden_code_pattern)
+    12.times do 
+      clear_screen
+      # p @hidden_code_pattern
+      game_board.print_board
+      @guess_pattern = player_guess_pattern 
+      game_board.add_pattern(@guess_pattern, feedback(@guess_pattern, @hidden_code_pattern))
+    end
+    clear_screen
+    game_board.print_board
   end
 end
 
